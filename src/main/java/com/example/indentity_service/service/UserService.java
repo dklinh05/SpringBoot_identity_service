@@ -11,6 +11,7 @@ import com.example.indentity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,13 +22,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor //tạo construct
 @FieldDefaults(level= AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+
 public class UserService {
 
     @Autowired //cho userRepo
      UserRepository userRepository;
      UserMapper userMapper;
 
-    public UserResponse createUser(UserCreationRequest request){
+    public UserResponse createUser( UserCreationRequest request){
         if(userRepository.existsByUsername(request.getUsername()))
            // throw new RuntimeException("ErrorCode.USER_EXISTED"); -> ra loi 9999
          throw new AppException(ErrorCode.USER_EXISTED); //ra loi 1001 user existed
@@ -41,9 +44,11 @@ public class UserService {
     public List<User> getUsers(){
         return userRepository.findAll();
     }
+
     public UserResponse getUser(String id) {
         return userMapper.toUserResponse(
-                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+                userRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     public UserResponse updateUser(String userId, UserUpdateRequest request){

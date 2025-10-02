@@ -1,10 +1,13 @@
 package com.example.indentity_service.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Builder
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class IntrospectResponse {
     boolean valid;
 }
